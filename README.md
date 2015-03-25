@@ -1,5 +1,5 @@
 # dont-look-back
-disable the back button on a web page
+Disable the back button on a web page
 
 让网页不能后退
 
