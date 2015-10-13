@@ -11,7 +11,7 @@
 				//global.location.href=""+global.location.pathname;
 				setTimeout(function(){
 					global.location.hash=lastHash;
-				},100)
+				},50)
 			}
 		};
 		//global.open(lastHash,"_self");
