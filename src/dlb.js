@@ -4,34 +4,47 @@
 	"use strict";
 	var obj,init;
 	obj={};
+	obj.enable = true
 	init=function(){
-		var lastHash=global.location.hash || "#####";
+		var lastHash=global.location.hash || "#";
 		var preventBack=function(){
-			if(global.location.hash!==lastHash){
-				//global.location.href=""+global.location.pathname;
-				setTimeout(function(){
-					global.location.hash=lastHash;
-				},50)
+			var newhash = obj.getHash();
+			if(obj.enable && newhash!==lastHash){
+				if(newhash===lastHash+"#"){
+					setTimeout(function(){
+						//global.location.hash=lastHash;
+						history.go(1);
+					},50)
+				}
+				else{
+					obj.setHash(newhash);
+				}
 			}
 		};
-		//global.open(lastHash,"_self");
 		if(history && history.pushState){
+			history.pushState({},document.title,lastHash+"###");
 			history.pushState({},document.title,lastHash+"##");
-			history.pushState({},document.title,"###");
+			history.pushState({},document.title,lastHash+"#");
+			history.pushState({},document.title,lastHash);
 		}
 		else{
+			global.location.hash=lastHash+"###";
 			global.location.hash=lastHash+"##";
-			global.location.hash="###";
+			global.location.hash=lastHash+"#";
+			global.location.hash=lastHash;
 		}
-		preventBack();
-		global.onhashchange=preventBack;
 		obj.setHash=function(newhash){
 			lastHash=newhash;
-			global.location.hash="##";
+			global.location.hash=lastHash+"###";
+			global.location.hash=lastHash+"##";
+			global.location.hash=lastHash+"#";
+			global.location.hash=lastHash;
 		};
 		obj.getHash=function(){
-			return global.location.hash;
+			return global.location.hash || "#";
 		};
+		preventBack();
+		global.onhashchange=preventBack;
 	};
 	//output
 	if(!global.dlb){
