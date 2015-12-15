@@ -79,8 +79,19 @@
 		}
 	};
 	//output
-	if(!global.dlb){
-		init();
-		global.dlb=global.dlb || obj;
+	init();
+	// Node.js
+	if (typeof module !== 'undefined' && module.exports) {
+		module.exports = obj;
 	}
+	// AMD / RequireJS
+	else if (typeof define !== 'undefined' && define.amd) {
+		define([], function () {
+			return obj;
+		});
+	}
+	// included directly via <script> tag
+	//else {
+		global.dlb = obj;
+	//}
 })(window);
