@@ -4,7 +4,7 @@
 	"use strict";
 	var obj,init;
 	obj={};
-	obj.enable=true
+	obj.enable=true;
 	init=function(){
 		//封装改变hash方法
 		obj.changeHashTo=function(newhash){
@@ -20,14 +20,14 @@
 				}
 			}
 			else{
-				global.location.hash=newhash
+				global.location.hash=newhash;
 			}
 		};
 		//加倍改变
 		obj.changeManyTimes=function(newhash){
-			obj.changeHashTo(newhash+"#3");
-			obj.changeHashTo(newhash+"#2");
-			obj.changeHashTo(newhash+"#1");
+			obj.changeHashTo(newhash+"#dlb3");
+			obj.changeHashTo(newhash+"#dlb2");
+			obj.changeHashTo(newhash+"#dlb1");
 			obj.changeHashTo(newhash);
 		};
 		//保存旧的并设置新的
@@ -46,16 +46,32 @@
 		obj.preventBack=function(){
 			//获取改变后的hash
 			var newhash = obj.getHash();
-			//检查hash是否变了
+			//检查是否启用且hash是否变了
 			if(obj.enable && newhash!==obj.lastHash){
 				//检查是后退还是前进
-				if(newhash===obj.lastHash+"#1"){
+				//if(newhash===obj.lastHash+"#dlb1"){
+				if(newhash.match(/\#dlb[1-3]$/)){
 					setTimeout(function(){
 						history.go(1);
-					},50)
+					},50);
 				}
 				else{
 					obj.setHash(newhash);
+				}
+			}else if(!obj.enable){
+				if(newhash.match(/\#dlb[1-3]$/)){
+					//如果回到防后退hash，继续后退
+					setTimeout(function(){
+						history.go(-1);
+					},50);
+				}else if(newhash===obj.lastHash){
+					//如果回到最初的hash，再后退一次
+					setTimeout(function(){
+						history.go(-1);
+					},50);
+				}else{
+					//完成后退步骤
+					obj.lastHash=newhash;
 				}
 			}
 		};
@@ -65,17 +81,13 @@
 		obj.changeManyTimes(obj.lastHash);
 		obj.preventBack();
 		if(global.addEventListener){
-			global.addEventListener("hashchange",function(ev){
-				obj.preventBack();
-			});
+			global.addEventListener("hashchange",obj.preventBack);
 		}
 		else if(global.attachEvent){
-			global.attachEvent("onhashchange",function(ev){
-				obj.preventBack();
-			});
+			global.attachEvent("onhashchange",obj.preventBack);
 		}
 		else{
-			//global.onhashchange=obj.preventBack;
+			global.onhashchange=obj.preventBack;
 		}
 	};
 	//output
